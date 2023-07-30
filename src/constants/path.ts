@@ -4,4 +4,4 @@ export const path = {
   login: '/login',
   logout: '/logput',
   resgister: 'resgister'
-}
+} as const
