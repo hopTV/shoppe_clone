@@ -16,9 +16,10 @@ const SortProductList = () => {
             Bán chạy
           </button>
           <select
-            className='h-8 bg-white px-4 text-left text-sm capitalize text-black hover:bg-slate-100'
+            className='h-8 rounded-sm bg-white px-4 text-left text-sm capitalize text-black outline-none hover:bg-slate-100'
             name=''
             id=''
+            defaultValue=''
           >
             <option value='' disabled>
               Giá
@@ -31,44 +32,46 @@ const SortProductList = () => {
             </option>
           </select>
         </div>
-      </div>
-      <div>
-        <span className='text-orange'>1</span>
-        <span>/2</span>
-      </div>
-      <div className='ml-2'>
-        <button className='h-8 cursor-not-allowed rounded-tl-sm bg-white/60 px-3 hover:bg-slate-100'>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke-width='1.5'
-            stroke='currentColor'
-            className='h-3 w-3'
-          >
-            <path
-              stroke-linecap='round'
-              stroke-linejoin='round'
-              d='M15.75 19.5L8.25 12l7.5-7.5'
-            />
-          </svg>
-        </button>
-        <button className='h-8 cursor-not-allowed rounded-tl-sm bg-white/60 px-3 hover:bg-slate-100'>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth={1.5}
-            stroke='currentColor'
-            className='h-3 w-3'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M8.25 4.5l7.5 7.5-7.5 7.5'
-            />
-          </svg>
-        </button>
+        <div className='flex items-center'>
+          <div>
+            <span className='text-orange'>1</span>
+            <span>/2</span>
+          </div>
+          <div className='ml-2'>
+            <button className='h-8 cursor-not-allowed rounded-tl-sm bg-white/60 px-3 hover:bg-slate-100'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth='1.5'
+                stroke='currentColor'
+                className='h-3 w-3'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M15.75 19.5L8.25 12l7.5-7.5'
+                />
+              </svg>
+            </button>
+            <button className='h-8 rounded-tl-sm bg-white px-3 hover:bg-slate-100'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='h-3 w-3'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M8.25 4.5l7.5 7.5-7.5 7.5'
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
