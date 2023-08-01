@@ -1,13 +1,28 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import classNames from 'classnames'
+
+import { Link, createSearchParams } from 'react-router-dom'
 import Button from 'src/components/button'
 import Input from 'src/components/input'
 import { path } from 'src/constants/path'
+import { QueryConfig } from 'src/hook/useQueryConfig'
+import { Category } from 'src/types/category.type'
 
-const AsideFilter = () => {
+interface Props {
+  queryConfig: QueryConfig
+  categories: Category[] | any
+}
+
+const AsideFilter = ({ queryConfig, categories }: Props) => {
+  const { category } = queryConfig
+
   return (
     <div className='py-4'>
-      <Link to={path.home} className='flex items-center font-bold'>
+      <Link
+        to={path.home}
+        className={classNames('flex items-center font-bold', {
+          'text-orange': !category
+        })}
+      >
         <svg viewBox='0 0 12 10' className='mr-3 h-4 w-3 fill-current'>
           <g fillRule='evenodd' stroke='none' strokeWidth={1}>
             <g transform='translate(-373 -208)'>
@@ -25,25 +40,35 @@ const AsideFilter = () => {
       </Link>
       <div className='my-4 h-[1px] bg-gray-300' />
       <ul>
-        <li className='py-2'>
-          <Link
-            to={path.home}
-            className='relative px-2 font-semibold text-orange'
-          >
-            <svg
-              viewBox='0 0 4 7'
-              className='absolute left-[-10px] top-1 h-2 w-2 fill-orange'
-            >
-              <polygon points='4 3.5 0 0 0 7' />
-            </svg>
-            thời trang nam
-          </Link>
-        </li>
-        <li className='py-2'>
-          <Link to={path.home} className='relative px-2'>
-            Điện thoại
-          </Link>
-        </li>
+        {categories.map((item: Category) => {
+          const isActive = category === item._id
+          return (
+            <li className='py-2 pl-2' key={item._id}>
+              <Link
+                to={{
+                  pathname: path.home,
+                  search: createSearchParams({
+                    ...queryConfig,
+                    category: item._id
+                  }).toString()
+                }}
+                className={classNames('relative px-2  ', {
+                  'font-bold text-orange': isActive
+                })}
+              >
+                {isActive && (
+                  <svg
+                    viewBox='0 0 4 7'
+                    className='absolute left-[-10px] top-1 h-2 w-2 fill-orange'
+                  >
+                    <polygon points='4 3.5 0 0 0 7' />
+                  </svg>
+                )}
+                {item.name}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
       <Link
         to={path.home}
