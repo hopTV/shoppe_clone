@@ -52,8 +52,6 @@ const Pagination = ({ pageSize, queryConfig }: Props) => {
       .fill(0)
       .map((_, index) => {
         const pageNumber = index + 1
-        console.log(pageNumber)
-
         if (
           page <= RANGE * 2 + 1 &&
           pageNumber > page + RANGE &&
