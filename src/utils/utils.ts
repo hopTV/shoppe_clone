@@ -28,6 +28,9 @@ export const formatNumberToSocialStyle = (value: number) => {
     .toLocaleLowerCase()
 }
 
+export const rateSale = (original: number, sale: number) =>
+  Math.round(((original - sale) / original) * 100) + '%'
+
 // export function isAxiosUnprocessableEntityError<FormError>(error: unknown): error is AxiosError<FormError> {
 //   return isAxiosError(error) && error.response?.status === HttpStatusCode.UnprocessableEntity
 // }

@@ -4,6 +4,7 @@ export interface Product {
   price: number
   rating: number
   price_before_discount: number
+  description: string
   quantity: number
   sold: number
   view: number
