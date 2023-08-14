@@ -1,9 +1,16 @@
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Popover from '../popover'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
+
+const MAX_PURCHASE = 5
+
 import { AppContext } from 'src/contexts/app.context'
+import { purchasesStatus } from 'src/constants/purchase'
+import purchasesApi from 'src/apis/purchase.pai'
+import { formatCurrency } from 'src/utils/utils'
+import noproduct from 'src/assets/images/no-product.png'
 
 const Header = () => {
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } =
@@ -16,6 +23,13 @@ const Header = () => {
       setProfile(null)
     }
   })
+
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchase', { status: purchasesStatus.inCart }],
+    queryFn: () => purchasesApi.getPurchases({ status: purchasesStatus.inCart })
+  })
+
+  const purchasesInCart = purchasesInCartData?.data.data
 
   const handleLogout = () => {
     logoutMutation.mutate()
@@ -169,6 +183,56 @@ const Header = () => {
               className=''
               renderPopover={
                 <div className='relative  max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
+                    <div className='p-2'>
+                      <div className='capitalize text-gray-400'>
+                        sản phẩm mới thêm
+                      </div>
+                      <div className='mt-5'>
+                        {purchasesInCart.slice(0, MAX_PURCHASE).map((item) => (
+                          <div className='mt-4 flex'>
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={item.product.image}
+                                alt='image'
+                                className='h-11 w-11 object-cover'
+                              />
+                            </div>
+                            <div className='ml-2 flex-grow overflow-hidden'>
+                              <div className='truncate'>
+                                {item.product.name}
+                              </div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <span className='text-orange'>
+                                ₫{formatCurrency(item.product.price)}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className='mt-6 flex items-center justify-between'>
+                        <div className='text-xs capitalize text-gray-500'>
+                          {purchasesInCart.length > MAX_PURCHASE
+                            ? purchasesInCart.length - MAX_PURCHASE
+                            : ''}{' '}
+                          thêm vào giỏ hàng
+                        </div>
+                        <button className='rounded-sm bg-orange px-4 py-2 capitalize text-[#fff] hover:opacity-90'>
+                          xem giỏ hàng
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
+                      <img
+                        src={noproduct}
+                        alt='no purchase'
+                        className='h-24 w-24'
+                      />
+                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
+                    </div>
+                  )}
                   <div className='p-2'>
                     <div className='capitalize text-gray-400'>
                       sản phẩm mới thêm

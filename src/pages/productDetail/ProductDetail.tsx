@@ -1,18 +1,22 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { Product as productType } from 'src/types/product.type'
 import productApi from 'src/apis/product.api'
 import ProductRating from 'src/components/productRating'
 import QuantityController from 'src/components/quantityController'
+
 import {
   formatCurrency,
   formatNumberToSocialStyle,
   getIdFromNameId,
   rateSale
 } from 'src/utils/utils'
+import purchasesApi from 'src/apis/purchase.pai'
+import { purchasesStatus } from 'src/constants/purchase'
 
 const ProductDetail = () => {
   const { nameId } = useParams()
@@ -28,8 +32,12 @@ const ProductDetail = () => {
 
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
+  const [buyCount, setBuyCount] = useState(1)
 
   const imageRef = useRef<HTMLImageElement>(null)
+
+  const queryClient = useQueryClient()
+  const addToCartMutation = useMutation(purchasesApi.addToCart)
 
   useEffect(() => {
     if (product && product.image.length > 0) {
@@ -82,6 +90,27 @@ const ProductDetail = () => {
 
   const handleRemoveZoom = () => {
     imageRef.current?.removeAttribute('style')
+  }
+
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value)
+  }
+
+  const handleAddToCart = () => {
+    addToCartMutation.mutate(
+      {
+        buy_count: buyCount,
+        product_id: product?._id as string
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message, { autoClose: 1000 })
+          queryClient.invalidateQueries({
+            queryKey: ['purchases', { status: purchasesStatus.inCart }]
+          })
+        }
+      }
+    )
   }
 
   if (!product) return null
@@ -201,13 +230,23 @@ const ProductDetail = () => {
               </div>
               <div className='mt-8 flex items-center'>
                 <div className='capitalize text-gray-500'>Số Lượng </div>
-                <QuantityController />
+                <QuantityController
+                  onDecrease={handleBuyCount}
+                  onIncrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  value={buyCount}
+                  max={product.quantity}
+                />
+                <div className='ml-6 text-sm text-gray-500'>
+                  {product.quantity} sản phẩm
+                </div>
               </div>
               <div className='mt-8 flex items-center'>
                 <button
                   className='flex h-12 items-center justify-center rounded-sm border border-orange
               bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5
               '
+                  onClick={handleAddToCart}
                 >
                   <svg
                     enableBackground='new 0 0 15 15'
