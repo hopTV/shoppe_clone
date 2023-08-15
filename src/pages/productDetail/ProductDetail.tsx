@@ -4,7 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { Product as productType } from 'src/types/product.type'
+import {
+  ProductListConfig,
+  Product as productType
+} from 'src/types/product.type'
 import productApi from 'src/apis/product.api'
 import ProductRating from 'src/components/productRating'
 import QuantityController from 'src/components/quantityController'
@@ -17,6 +20,7 @@ import {
 } from 'src/utils/utils'
 import purchasesApi from 'src/apis/purchase.pai'
 import { purchasesStatus } from 'src/constants/purchase'
+import Product from '../productList/product'
 
 const ProductDetail = () => {
   const { nameId } = useParams()
@@ -29,6 +33,21 @@ const ProductDetail = () => {
   })
 
   const product = ProductData?.data.data
+
+  const queryConfig: ProductListConfig = {
+    limit: '20',
+    page: '1',
+    category: product?.category._id
+  }
+
+  const { data: productDataMore } = useQuery({
+    queryKey: ['productMore', queryConfig],
+    queryFn: () => {
+      return productApi.getProducts(queryConfig)
+    },
+    staleTime: 3 * 6 * 1000,
+    enabled: Boolean(product)
+  })
 
   const [currentIndexImage, setCurrentIndexImage] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
@@ -307,7 +326,7 @@ const ProductDetail = () => {
             <div className='rounded bg-gray-50 p-4 text-lg capitalize text-slate-700'>
               Mô tả sản phẩm
             </div>
-            <div className='mx-4 mb-4 mt-12 text-sm leading-loose'>
+            <div className='mx-4 mb-4 mt-12 text-left text-sm leading-loose'>
               <div
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(product.description)
@@ -318,8 +337,19 @@ const ProductDetail = () => {
         </div>
       </div>
       <div className='mt-8'>
-        <div className='container'>
-          <div className='uppercase text-gray-400'>có thể bạn cũng thick</div>
+        <div className='mt-8'>
+          <div className='container'>
+            <div className='uppercase text-gray-400'>CÓ THỂ BẠN CŨNG THÍCH</div>
+            {productDataMore && (
+              <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
+                {productDataMore.data.data.products.map((product) => (
+                  <div className='col-span-1' key={product._id}>
+                    <Product product={product} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

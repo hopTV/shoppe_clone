@@ -2,7 +2,8 @@ export const path = {
   home: '/',
   profile: '/profile',
   login: '/login',
-  logout: '/logput',
-  resgister: 'resgister',
-  productDetail: ':nameId'
+  logout: '/logout',
+  resgister: '/resgister',
+  productDetail: ':nameId',
+  cart: '/cart'
 } as const
