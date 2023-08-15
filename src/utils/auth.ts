@@ -1,6 +1,8 @@
 import { User } from 'src/types/user.type'
 
 export const setAccessTokenToLs = (access_token: string) => {
+  console.log('vào đây')
+
   localStorage.setItem('access_token', access_token)
 }
 

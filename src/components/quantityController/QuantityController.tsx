@@ -63,7 +63,7 @@ const QuantityController = ({
   }
 
   return (
-    <div className='ml-6 flex items-center'>
+    <div className={`${classNameWrapper} flex items-center`}>
       <button
         className='flex h-8 w-8 items-center justify-center rounded-l-md border border-gray-300
       text-gray-600

@@ -10,6 +10,7 @@ import {
 } from './auth'
 
 import { path } from 'src/constants/path'
+import { URL_LOGIN, URL_REGISTER } from 'src/apis/auth.api'
 
 class Http {
   instance: AxiosInstance
@@ -37,9 +38,9 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === path.login || url === path.resgister) {
+        if (url === URL_LOGIN || url === URL_REGISTER) {
           const data = response.data as AuthResponse
-          this.accessToken = data.data?.access_token!
+          this.accessToken = data.data?.access_token
           setAccessTokenToLs(this.accessToken)
           setProfileToLs(data.data.user)
         } else if (url === path.logout) {
