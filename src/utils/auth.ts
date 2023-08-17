@@ -6,9 +6,13 @@ export const setAccessTokenToLs = (access_token: string) => {
   localStorage.setItem('access_token', access_token)
 }
 
+export const LocalStorageEventTarget = new EventTarget()
+
 export const clearLs = () => {
   localStorage.removeItem('access_token')
   localStorage.removeItem('profile')
+  const clearLsEvent = new Event('clearLS')
+  LocalStorageEventTarget.dispatchEvent(clearLsEvent)
 }
 
 export const getAccessTokenFromLS = () =>
